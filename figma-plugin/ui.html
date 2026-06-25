@@ -97,6 +97,15 @@ $('btn').onclick = function() {
 
   // Ask code.js to read the variables
   parent.postMessage({ pluginMessage: { type: 'fetch' } }, '*');
+
+  // If code.js doesn't respond within 3s, surface the error
+  setTimeout(function() {
+    if ($('btn').disabled) {
+      log('No response from plugin sandbox. Try: Remove plugin → Import from manifest again.', 'err');
+      $('btn').disabled = false;
+      $('btn').textContent = 'Sync tokens to GitHub';
+    }
+  }, 3000);
 };
 
 async function pushToGitHub(files) {
