@@ -31,8 +31,11 @@ const seg  = s => s.trim().replace(/\s+/g, '-');
 
 function setPath(obj, parts, val) {
   let cur = obj;
-  for (let i = 0; i < parts.length - 1; i++) { cur[parts[i]] ??= {}; cur = cur[parts[i]]; }
-  cur[parts.at(-1)] = val;
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (!cur[parts[i]]) cur[parts[i]] = {};
+    cur = cur[parts[i]];
+  }
+  cur[parts[parts.length - 1]] = val;
 }
 
 figma.showUI(__html__, { width: 440, height: 380 });
