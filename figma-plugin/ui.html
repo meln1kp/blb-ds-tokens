@@ -48,11 +48,9 @@ window.onerror = function(msg, src, line) {
 var DEFAULTS = { branch: 'main', folder: 'tokens', repo: 'meln1kp/blb-ds-tokens' };
 var $ = function(id) { return document.getElementById(id); };
 
-try {
-  ['ghToken', 'repo', 'branch', 'folder'].forEach(function(k) {
-    $(k).value = localStorage.getItem(k) || DEFAULTS[k] || '';
-  });
-} catch(e) { /* localStorage unavailable */ }
+['ghToken', 'repo', 'branch', 'folder'].forEach(function(k) {
+  $(k).value = DEFAULTS[k] || '';
+});
 
 function log(msg, cls) {
   const d = Object.assign(document.createElement('div'), { textContent: msg, className: cls || '' });
@@ -94,8 +92,6 @@ function handleSync() {
   if (!pat) { $('ghToken').style.borderColor = '#c00'; log('GitHub token is required.', 'err'); return; }
   if (!repo) { $('repo').style.borderColor = '#c00'; log('Repository is required (e.g. meln1kp/blb-ds-tokens).', 'err'); return; }
   $('ghToken').style.borderColor = ''; $('repo').style.borderColor = '';
-
-  ['ghToken', 'repo', 'branch', 'folder'].forEach(k => localStorage.setItem(k, $(k).value));
 
   $('btn').disabled = true;
   $('btn').textContent = 'Reading variables…';
