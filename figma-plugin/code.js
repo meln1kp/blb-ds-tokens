@@ -1,11 +1,11 @@
 // Figma plugin sandbox — ES6 only (no ??, ?., ??=, .at(), Object.fromEntries)
 
-function rgbToHex(color) {
+function rgbToRgba(color) {
+  var r = Math.round(color.r * 255);
+  var g = Math.round(color.g * 255);
+  var b = Math.round(color.b * 255);
   var a = (color.a !== undefined) ? color.a : 1;
-  var h = function(x) { return Math.round(x * 255).toString(16).padStart(2, '0'); };
-  return a < 1
-    ? '#' + h(color.r) + h(color.g) + h(color.b) + h(a)
-    : '#' + h(color.r) + h(color.g) + h(color.b);
+  return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + Math.round(a * 100) / 100 + ')';
 }
 
 var DIM_SCOPES = new Set([
@@ -24,7 +24,7 @@ function dtcgType(v) {
 }
 
 function dtcgValue(v, raw) {
-  if (v.resolvedType === 'COLOR')   return rgbToHex(raw);
+  if (v.resolvedType === 'COLOR')   return rgbToRgba(raw);
   if (v.resolvedType === 'STRING')  return String(raw);
   if (v.resolvedType === 'BOOLEAN') return Boolean(raw);
   if (v.resolvedType === 'FLOAT')   return dtcgType(v) === 'dimension' ? (raw + 'px') : raw;

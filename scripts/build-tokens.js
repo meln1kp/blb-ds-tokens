@@ -61,7 +61,6 @@ const sharedHooks = {
       'name/kebab',
       'time/seconds',
       'html/icon',
-      'color/css',
       'dimension/px',
       'asset/url',
       'fontFamily/css',
