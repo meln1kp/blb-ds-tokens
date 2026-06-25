@@ -3,145 +3,145 @@
     "brand": {
       "default": {
         "$type": "color",
-        "$value": "#2ecc71"
+        "$value": "rgba(46, 204, 113, 1)"
       },
       "emphasis": {
         "$type": "color",
-        "$value": "#28b463"
+        "$value": "rgba(40, 180, 99, 1)"
       },
       "subtle": {
         "$type": "color",
-        "$value": "#239b56"
+        "$value": "rgba(35, 155, 86, 1)"
       }
     },
     "interactive": {
       "default": {
         "$type": "color",
-        "$value": "#3498db"
+        "$value": "rgba(52, 152, 219, 1)"
       },
       "hover": {
         "$type": "color",
-        "$value": "#2e86c1"
+        "$value": "rgba(46, 134, 193, 1)"
       }
     },
     "accent": {
       "default": {
         "$type": "color",
-        "$value": "#e67e22"
+        "$value": "rgba(230, 126, 34, 1)"
       },
       "hover": {
         "$type": "color",
-        "$value": "#d35400"
+        "$value": "rgba(211, 84, 0, 1)"
       },
       "subtle": {
         "$type": "color",
-        "$value": "#ba4a00"
+        "$value": "rgba(186, 74, 0, 1)"
       }
     },
     "surface": {
       "base": {
         "$type": "color",
-        "$value": "#34495e"
+        "$value": "rgba(52, 73, 94, 1)"
       },
       "raised": {
         "$type": "color",
-        "$value": "#5d6d7e"
+        "$value": "rgba(93, 109, 126, 1)"
       },
       "overlay": {
         "$type": "color",
-        "$value": "#2e4053"
+        "$value": "rgba(46, 64, 83, 1)"
       },
       "sunken": {
         "$type": "color",
-        "$value": "#1b2631"
+        "$value": "rgba(27, 38, 49, 1)"
       },
       "inverted": {
         "$type": "color",
-        "$value": "#0c0c0d"
+        "$value": "rgba(12, 12, 13, 1)"
       }
     },
     "text": {
       "primary": {
         "$type": "color",
-        "$value": "#f2f4f4"
+        "$value": "rgba(242, 244, 244, 1)"
       },
       "secondary": {
         "$type": "color",
-        "$value": "#ccd1d1"
+        "$value": "rgba(204, 209, 209, 1)"
       },
       "disabled": {
         "$type": "color",
-        "$value": "#7f8c8d"
+        "$value": "rgba(127, 140, 141, 1)"
       },
       "inverse": {
         "$type": "color",
-        "$value": "#34495e"
+        "$value": "rgba(52, 73, 94, 1)"
       },
       "on-brand": {
         "$type": "color",
-        "$value": "#ffffff"
+        "$value": "rgba(255, 255, 255, 1)"
       }
     },
     "border": {
       "subtle": {
         "$type": "color",
-        "$value": "#0c0c0d33"
+        "$value": "rgba(12, 12, 13, 0.2)"
       },
       "default": {
         "$type": "color",
-        "$value": "#0c0c0d66"
+        "$value": "rgba(12, 12, 13, 0.4)"
       },
       "strong": {
         "$type": "color",
-        "$value": "#0c0c0db2"
+        "$value": "rgba(12, 12, 13, 0.7)"
       }
     },
     "feedback": {
       "success": {
         "$type": "color",
-        "$value": "#2ecc71"
+        "$value": "rgba(46, 204, 113, 1)"
       },
       "success-subtle": {
         "$type": "color",
-        "$value": "#d5f5e3"
+        "$value": "rgba(213, 245, 227, 1)"
       },
       "warning": {
         "$type": "color",
-        "$value": "#f1c40f"
+        "$value": "rgba(241, 196, 15, 1)"
       },
       "warning-subtle": {
         "$type": "color",
-        "$value": "#7d6608"
+        "$value": "rgba(125, 102, 8, 1)"
       },
       "danger": {
         "$type": "color",
-        "$value": "#e74c3c"
+        "$value": "rgba(231, 76, 60, 1)"
       },
       "danger-subtle": {
         "$type": "color",
-        "$value": "#78281f"
+        "$value": "rgba(120, 40, 31, 1)"
       },
       "info": {
         "$type": "color",
-        "$value": "#3498db"
+        "$value": "rgba(52, 152, 219, 1)"
       },
       "info-subtle": {
         "$type": "color",
-        "$value": "#2e86c1"
+        "$value": "rgba(46, 134, 193, 1)"
       }
     },
     "rank": {
       "gold": {
         "$type": "color",
-        "$value": "#b9770e"
+        "$value": "rgba(185, 119, 14, 1)"
       },
       "silver": {
         "$type": "color",
-        "$value": "#99a3a4"
+        "$value": "rgba(153, 163, 164, 1)"
       },
       "bronze": {
         "$type": "color",
-        "$value": "#af601a"
+        "$value": "rgba(175, 96, 26, 1)"
       }
     }
   }
