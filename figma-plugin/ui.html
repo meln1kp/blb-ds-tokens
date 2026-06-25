@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  body { font: 13px/1.5 -apple-system, sans-serif; padding: 16px; margin: 0; color: #333; }
+  label { display: block; margin-bottom: 10px; }
+  label span { display: block; font-size: 11px; color: #666; margin-bottom: 3px; }
+  input { width: 100%; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+  button { width: 100%; margin-top: 14px; padding: 8px 0; background: #18a0fb; color: #fff;
+           border: none; border-radius: 4px; font: 13px sans-serif; cursor: pointer; }
+  button:disabled { background: #bbb; cursor: default; }
+  #log { margin-top: 12px; max-height: 120px; overflow-y: auto;
+         font: 11px/1.4 monospace; color: #555; }
+  .err { color: #c00; }
+  .ok  { color: #080; }
+</style>
+</head>
+<body>
+
+<label>
+  <span>GitHub Token — PAT with <code>contents:write</code></span>
+  <input id="ghToken" type="password" placeholder="ghp_…">
+</label>
+<label>
+  <span>Repository</span>
+  <input id="repo" placeholder="owner/repo">
+</label>
+<label>
+  <span>Branch</span>
+  <input id="branch" placeholder="main">
+</label>
+<label>
+  <span>Tokens folder</span>
+  <input id="folder" placeholder="tokens">
+</label>
+
+<button id="btn" disabled>Waiting for tokens…</button>
+<div id="log"></div>
+
+<script>
+const DEFAULTS = { branch: 'main', folder: 'tokens', repo: 'meln1kp/blb-ds-tokens' };
+const $ = id => document.getElementById(id);
+
+['ghToken', 'repo', 'branch', 'folder'].forEach(k => {
+  $(k).value = localStorage.getItem(k) ?? DEFAULTS[k] ?? '';
+});
+
+function log(msg, cls) {
+  const d = Object.assign(document.createElement('div'), { textContent: msg, className: cls ?? '' });
+  $('log').append(d);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+
+let files = null;
+
+window.onmessage = ({ data }) => {
+  const msg = data.pluginMessage;
+  if (msg?.type !== 'tokens-ready') return;
+  files = msg.files;
+  const n = Object.keys(files).length;
+  $('btn').textContent = `Push ${n} file${n !== 1 ? 's' : ''} to GitHub`;
+  $('btn').disabled = false;
+};
+
+$('btn').onclick = async () => {
+  const pat    = $('ghToken').value.trim();
+  const repo   = $('repo').value.trim();
+  const branch = $('branch').value.trim() || 'main';
+  const folder = $('folder').value.trim().replace(/\/$/, '') || 'tokens';
+
+  ['ghToken', 'repo', 'branch', 'folder'].forEach(k => localStorage.setItem(k, $(k).value));
+
+  if (!pat || !repo) { log('GitHub token and repo are required.', 'err'); return; }
+
+  $('btn').disabled = true;
+  $('log').innerHTML = '';
+
+  // Thin wrapper: POST/PATCH/GET to GitHub REST API
+  const gh = async (path, opts = {}) => {
+    const res = await fetch(`https://api.github.com/repos/${repo}${path}`, {
+      ...opts,
+      headers: {
+        Authorization: `Bearer ${pat}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: opts.body != null ? JSON.stringify(opts.body) : undefined,
+    });
+    if (!res.ok) throw new Error(`GitHub ${res.status} on ${path}: ${await res.text()}`);
+    return res.json();
+  };
+
+  try {
+    // 1. Resolve branch tip
+    log('Fetching branch ref…');
+    const { object: { sha: baseSha } } = await gh(`/git/ref/heads/${branch}`);
+    const { tree: { sha: baseTree } }  = await gh(`/git/commits/${baseSha}`);
+
+    // 2. Create one blob per token file
+    log(`Creating ${Object.keys(files).length} blob(s)…`);
+    const tree = [];
+    for (const [name, content] of Object.entries(files)) {
+      const { sha } = await gh('/git/blobs', { method: 'POST', body: { content, encoding: 'utf-8' } });
+      tree.push({ path: `${folder}/${name}`, mode: '100644', type: 'blob', sha });
+    }
+
+    // 3. Atomic commit: new tree → new commit → update ref
+    log('Committing…');
+    const { sha: newTree }   = await gh('/git/trees', { method: 'POST',
+      body: { base_tree: baseTree, tree } });
+    const { sha: newCommit } = await gh('/git/commits', { method: 'POST', body: {
+      message: `chore: sync tokens from Figma (${new Date().toISOString().slice(0, 10)})`,
+      tree: newTree,
+      parents: [baseSha],
+    }});
+    await gh(`/git/refs/heads/${branch}`, { method: 'PATCH', body: { sha: newCommit } });
+
+    log(`✓ ${Object.keys(files).length} file(s) → ${repo}@${branch}`, 'ok');
+    log(`  ${Object.keys(files).join('  ')}`, 'ok');
+  } catch (e) {
+    log(e.message, 'err');
+  } finally {
+    $('btn').disabled = false;
+  }
+};
+</script>
+</body>
+</html>
