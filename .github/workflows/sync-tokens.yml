@@ -1,17 +1,18 @@
-name: Sync Figma Tokens
+name: Build Tokens
 
 on:
-  schedule:
-    # Daily at 06:00 UTC
-    - cron: '0 6 * * *'
-  # On-demand push
+  # Fires when Tokens Studio pushes token JSON to main
+  push:
+    branches: [main]
+    paths: ['tokens/**']
+  # Keep manual trigger for one-off rebuilds
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  sync:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,19 +26,7 @@ jobs:
       - name: Install dependencies
         run: npm install --no-fund --no-audit
 
-      - name: Check secrets and variables
-        run: |
-          echo "FIGMA_TOKEN set:    ${{ secrets.FIGMA_TOKEN != '' }}"
-          echo "FIGMA_FILE_KEY set: ${{ vars.FIGMA_FILE_KEY != '' }}"
-          echo "FIGMA_FILE_KEY val: ${{ vars.FIGMA_FILE_KEY }}"
-
-      - name: Fetch tokens from Figma
-        run: node scripts/fetch-tokens.js
-        env:
-          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
-          FIGMA_FILE_KEY: ${{ vars.FIGMA_FILE_KEY }}
-
-      - name: Build CSS
+      - name: Build CSS from tokens
         run: node scripts/build-tokens.js
 
       - name: Commit dist/ if changed
@@ -46,7 +35,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add dist/
           if ! git diff --staged --quiet; then
-            git commit -m "chore: sync tokens from Figma [skip ci]"
+            git commit -m "chore: build tokens [skip ci]"
             git push
           else
             echo "No changes to commit."
