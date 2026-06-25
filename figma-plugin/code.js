@@ -50,9 +50,11 @@ function setPath(obj, parts, val) {
 
 figma.showUI(__html__, { width: 440, height: 380 });
 
-// Wait for UI to signal it's ready before processing variables
-figma.ui.onmessage = function(msg) {
-  if (!msg || msg.type !== 'ui-ready') return;
+var sent = false;
+
+function buildAndSend() {
+  if (sent) return;
+  sent = true;
 
   // Build varById lookup
   var allVars = figma.variables.getLocalVariables();
@@ -104,4 +106,12 @@ figma.ui.onmessage = function(msg) {
   }
 
   figma.ui.postMessage({ type: 'tokens-ready', files });
+}
+
+// Approach 1: UI signals when ready
+figma.ui.onmessage = function(msg) {
+  if (msg && msg.type === 'ui-ready') buildAndSend();
 };
+
+// Approach 2: fallback — give UI 300ms to load
+setTimeout(buildAndSend, 300);
