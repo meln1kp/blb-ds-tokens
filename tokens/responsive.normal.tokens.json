@@ -1,0 +1,56 @@
+{
+  "viewport": {
+    "device": {
+      "$type": "string",
+      "$value": "normal"
+    },
+    "device-width": {
+      "$type": "dimension",
+      "$value": "1440px"
+    },
+    "root-font-size": {
+      "$type": "number",
+      "$value": "{font-size.03}"
+    },
+    "scale": {
+      "$type": "number",
+      "$value": 1
+    },
+    "breakpoints": {
+      "width-min": {
+        "$type": "number",
+        "$value": 871
+      },
+      "width-max": {
+        "$type": "number",
+        "$value": 1920
+      },
+      "height-min": {
+        "$type": "number",
+        "$value": 600
+      },
+      "height-max": {
+        "$type": "number",
+        "$value": 2000
+      }
+    }
+  },
+  "layout": {
+    "columns": {
+      "count": {
+        "$type": "number",
+        "$value": 12
+      }
+    },
+    "sidebar": {
+      "width": {
+        "$type": "dimension",
+        "$value": "280px"
+      },
+      "collapsed": {
+        "$type": "boolean",
+        "$value": false
+      }
+    }
+  }
+}
