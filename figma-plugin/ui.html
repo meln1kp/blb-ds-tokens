@@ -36,16 +36,23 @@
   <input id="folder" placeholder="tokens">
 </label>
 
-<button id="btn">Sync tokens to GitHub</button>
+<button id="btn" onclick="handleSync()">Sync tokens to GitHub</button>
 <div id="log"></div>
 
 <script>
-const DEFAULTS = { branch: 'main', folder: 'tokens', repo: 'meln1kp/blb-ds-tokens' };
-const $ = id => document.getElementById(id);
+// Catch any JS error and show it visibly
+window.onerror = function(msg, src, line) {
+  document.getElementById('log').innerHTML = '<div style="color:#c00">JS Error line ' + line + ': ' + msg + '</div>';
+};
 
-['ghToken', 'repo', 'branch', 'folder'].forEach(k => {
-  $(k).value = localStorage.getItem(k) || DEFAULTS[k] || '';
-});
+var DEFAULTS = { branch: 'main', folder: 'tokens', repo: 'meln1kp/blb-ds-tokens' };
+var $ = function(id) { return document.getElementById(id); };
+
+try {
+  ['ghToken', 'repo', 'branch', 'folder'].forEach(function(k) {
+    $(k).value = localStorage.getItem(k) || DEFAULTS[k] || '';
+  });
+} catch(e) { /* localStorage unavailable */ }
 
 function log(msg, cls) {
   const d = Object.assign(document.createElement('div'), { textContent: msg, className: cls || '' });
@@ -81,7 +88,7 @@ window.onmessage = function(event) {
   pushToGitHub(files);
 };
 
-$('btn').onclick = function() {
+function handleSync() {
   const pat  = $('ghToken').value.trim();
   const repo = $('repo').value.trim();
   if (!pat) { $('ghToken').style.borderColor = '#c00'; log('GitHub token is required.', 'err'); return; }
