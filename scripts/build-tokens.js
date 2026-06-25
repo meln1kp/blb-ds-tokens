@@ -40,9 +40,48 @@ const lightFiles = allFiles
   });
 console.log(`Building from ${lightFiles.length} light + ${darkFiles.length} dark token files…`);
 
-// Shared hooks for both builds:
-//   - dimension/px  keeps dimension values as px strings (skips the built-in pxToRem)
-//   - css/px        same as the built-in 'css' group minus size/pxToRem
+// Abbreviation map — sorted longest-first to avoid partial-match conflicts
+const ABBREV_MAP = [
+  ['letter-spacing', 'ls'],
+  ['line-height',    'lh'],
+  ['font-family',    'ff'],
+  ['font-weight',    'fw'],
+  ['interactive',    'int'],
+  ['font-style',     'fst'],
+  ['typography',     'ty'],
+  ['component',      'cmp'],
+  ['font-size',      'fs'],
+  ['feedback',       'fb'],
+  ['viewport',       'vp'],
+  ['surface',        'surf'],
+  ['opacity',        'op'],
+  ['layout',         'lay'],
+  ['border',         'bdr'],
+  ['color',          'clr'],
+  ['space',          'sp'],
+];
+
+function applyAbbrev(name) {
+  for (const [from, to] of ABBREV_MAP) {
+    name = name.replace(
+      new RegExp('(^|-)' + from + '(-|$)', 'g'),
+      (_, pre, suf) => pre + to + suf,
+    );
+  }
+  return name;
+}
+
+// rgba(r, g, b, 1) → #rrggbb  (opaque colors only; semi-transparent kept as rgba)
+function rgbaToHex(value) {
+  if (typeof value !== 'string') return value;
+  const m = value.match(/^rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*1\s*\)$/);
+  if (!m) return value;
+  return '#' + [m[1], m[2], m[3]]
+    .map(n => parseInt(n, 10).toString(16).padStart(2, '0'))
+    .join('');
+}
+
+// Shared hooks for both light and dark builds
 const sharedHooks = {
   transforms: {
     'dimension/px': {
@@ -53,15 +92,25 @@ const sharedHooks = {
         return typeof v === 'number' ? `${v}px` : String(v);
       },
     },
+    'name/abbrev': {
+      type: 'name',
+      transform: (token) => applyAbbrev(token.path.join('-').toLowerCase()),
+    },
+    'color/hex': {
+      type: 'value',
+      filter: (token) => token.$type === 'color',
+      transform: (token) => rgbaToHex(token.$value),
+    },
   },
   transformGroups: {
-    // 'css' group minus 'size/rem', replaced by 'dimension/px' to keep px values
+    // 'css' group with name/abbrev + color/hex instead of name/kebab + size/rem + color/css
     'css/px': [
       'attribute/cti',
-      'name/kebab',
+      'name/abbrev',
       'time/seconds',
       'html/icon',
       'dimension/px',
+      'color/hex',
       'asset/url',
       'fontFamily/css',
       'cubicBezier/css',
@@ -83,7 +132,6 @@ const sdLight = new StyleDictionary({
   platforms: {
     css: {
       transformGroup: 'css/px',
-      prefix: 'blb',
       buildPath: 'dist/',
       files: [{
         destination: 'tokens.css',
@@ -91,6 +139,7 @@ const sdLight = new StyleDictionary({
         options: {
           selector: ':root',
           outputReferences: true,
+          showFileHeader: false,
         },
       }],
     },
@@ -112,7 +161,6 @@ if (darkFiles.length > 0) {
     platforms: {
       css: {
         transformGroup: 'css/px',
-        prefix: 'blb',
         buildPath: 'dist/',
         files: [{
           destination: 'tokens.dark.css',
@@ -121,6 +169,7 @@ if (darkFiles.length > 0) {
           options: {
             selector: '[data-theme="dark"]',
             outputReferences: true,
+            showFileHeader: false,
           },
         }],
       },

@@ -1,38 +1,34 @@
-/**
- * Do not edit directly, this file was auto-generated.
- */
-
 [data-theme="dark"] {
-  --blb-color-brand-default: var(--blb-emerald-400);
-  --blb-color-brand-emphasis: var(--blb-emerald-500);
-  --blb-color-brand-subtle: var(--blb-emerald-50);
-  --blb-color-interactive-default: var(--blb-peter-river-400);
-  --blb-color-interactive-hover: var(--blb-peter-river-500);
-  --blb-color-accent-default: var(--blb-carrot-400);
-  --blb-color-accent-hover: var(--blb-carrot-500);
-  --blb-color-accent-subtle: var(--blb-carrot-50);
-  --blb-color-surface-base: var(--blb-asphalt-800);
-  --blb-color-surface-raised: var(--blb-asphalt-700);
-  --blb-color-surface-overlay: var(--blb-asphalt-900);
-  --blb-color-surface-sunken: var(--blb-black-900);
-  --blb-color-surface-inverted: var(--blb-asphalt-50);
-  --blb-color-text-primary: var(--blb-white-900);
-  --blb-color-text-secondary: var(--blb-white-500);
-  --blb-color-text-disabled: var(--blb-white-200);
-  --blb-color-text-inverse: var(--blb-concrete-50);
-  --blb-color-text-on-brand: var(--blb-white-900);
-  --blb-color-border-subtle: var(--blb-white-100);
-  --blb-color-border-default: var(--blb-white-200);
-  --blb-color-border-strong: var(--blb-white-300);
-  --blb-color-feedback-success: var(--blb-emerald-400);
-  --blb-color-feedback-success-subtle: var(--blb-emerald-50);
-  --blb-color-feedback-warning: var(--blb-sunflower-400);
-  --blb-color-feedback-warning-subtle: var(--blb-sunflower-50);
-  --blb-color-feedback-danger: var(--blb-alizarin-400);
-  --blb-color-feedback-danger-subtle: var(--blb-alizarin-50);
-  --blb-color-feedback-info: var(--blb-peter-river-400);
-  --blb-color-feedback-info-subtle: var(--blb-belize-hole-50);
-  --blb-color-rank-gold: var(--blb-orange-500);
-  --blb-color-rank-silver: var(--blb-concrete-300);
-  --blb-color-rank-bronze: var(--blb-carrot-500);
+  --clr-brand-default: var(--emerald-400);
+  --clr-brand-emphasis: var(--emerald-500);
+  --clr-brand-subtle: var(--emerald-50);
+  --clr-int-default: var(--peter-river-400);
+  --clr-int-hover: var(--peter-river-500);
+  --clr-accent-default: var(--carrot-400);
+  --clr-accent-hover: var(--carrot-500);
+  --clr-accent-subtle: var(--carrot-50);
+  --clr-surf-base: var(--asphalt-800);
+  --clr-surf-raised: var(--asphalt-700);
+  --clr-surf-overlay: var(--asphalt-900);
+  --clr-surf-sunken: var(--black-900);
+  --clr-surf-inverted: var(--asphalt-50);
+  --clr-text-primary: var(--white-900);
+  --clr-text-secondary: var(--white-500);
+  --clr-text-disabled: var(--white-200);
+  --clr-text-inverse: var(--concrete-50);
+  --clr-text-on-brand: var(--white-900);
+  --clr-bdr-subtle: var(--white-100);
+  --clr-bdr-default: var(--white-200);
+  --clr-bdr-strong: var(--white-300);
+  --clr-fb-success: var(--emerald-400);
+  --clr-fb-success-subtle: var(--emerald-50);
+  --clr-fb-warning: var(--sunflower-400);
+  --clr-fb-warning-subtle: var(--sunflower-50);
+  --clr-fb-danger: var(--alizarin-400);
+  --clr-fb-danger-subtle: var(--alizarin-50);
+  --clr-fb-info: var(--peter-river-400);
+  --clr-fb-info-subtle: var(--belize-hole-50);
+  --clr-rank-gold: var(--orange-500);
+  --clr-rank-silver: var(--concrete-300);
+  --clr-rank-bronze: var(--carrot-500);
 }

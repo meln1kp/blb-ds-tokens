@@ -4,7 +4,7 @@ on:
   # Fires when the Figma plugin pushes token JSON to main
   push:
     branches: [main]
-    paths: ['tokens/**']
+    paths: ['tokens/**', 'scripts/**']
   # Manual trigger for one-off rebuilds
   workflow_dispatch:
 
