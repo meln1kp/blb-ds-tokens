@@ -84,7 +84,9 @@ window.onmessage = function(event) {
 $('btn').onclick = function() {
   const pat  = $('ghToken').value.trim();
   const repo = $('repo').value.trim();
-  if (!pat || !repo) { log('GitHub token and repo are required.', 'err'); return; }
+  if (!pat) { $('ghToken').style.borderColor = '#c00'; log('GitHub token is required.', 'err'); return; }
+  if (!repo) { $('repo').style.borderColor = '#c00'; log('Repository is required (e.g. meln1kp/blb-ds-tokens).', 'err'); return; }
+  $('ghToken').style.borderColor = ''; $('repo').style.borderColor = '';
 
   ['ghToken', 'repo', 'branch', 'folder'].forEach(k => localStorage.setItem(k, $(k).value));
 

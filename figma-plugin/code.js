@@ -48,7 +48,7 @@ function setPath(obj, parts, val) {
   cur[parts[parts.length - 1]] = val;
 }
 
-figma.showUI(__html__, { width: 440, height: 400 });
+figma.showUI(__html__, { width: 440, height: 460 });
 
 // UI sends 'fetch' when the button is clicked — we respond with the token files
 figma.ui.onmessage = function(msg) {
