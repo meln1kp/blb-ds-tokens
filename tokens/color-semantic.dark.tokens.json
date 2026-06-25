@@ -3,145 +3,145 @@
     "brand": {
       "default": {
         "$type": "color",
-        "$value": "rgba(88, 214, 141, 1)"
+        "$value": "{emerald.400}"
       },
       "emphasis": {
         "$type": "color",
-        "$value": "rgba(46, 204, 113, 1)"
+        "$value": "{emerald.500}"
       },
       "subtle": {
         "$type": "color",
-        "$value": "rgba(234, 250, 241, 1)"
+        "$value": "{emerald.50}"
       }
     },
     "interactive": {
       "default": {
         "$type": "color",
-        "$value": "rgba(93, 173, 226, 1)"
+        "$value": "{peter-river.400}"
       },
       "hover": {
         "$type": "color",
-        "$value": "rgba(52, 152, 219, 1)"
+        "$value": "{peter-river.500}"
       }
     },
     "accent": {
       "default": {
         "$type": "color",
-        "$value": "rgba(235, 152, 78, 1)"
+        "$value": "{carrot.400}"
       },
       "hover": {
         "$type": "color",
-        "$value": "rgba(230, 126, 34, 1)"
+        "$value": "{carrot.500}"
       },
       "subtle": {
         "$type": "color",
-        "$value": "rgba(253, 242, 233, 1)"
+        "$value": "{carrot.50}"
       }
     },
     "surface": {
       "base": {
         "$type": "color",
-        "$value": "rgba(33, 47, 60, 1)"
+        "$value": "{asphalt.800}"
       },
       "raised": {
         "$type": "color",
-        "$value": "rgba(40, 55, 71, 1)"
+        "$value": "{asphalt.700}"
       },
       "overlay": {
         "$type": "color",
-        "$value": "rgba(27, 38, 49, 1)"
+        "$value": "{asphalt.900}"
       },
       "sunken": {
         "$type": "color",
-        "$value": "rgba(12, 12, 13, 1)"
+        "$value": "{black.900}"
       },
       "inverted": {
         "$type": "color",
-        "$value": "rgba(235, 237, 239, 1)"
+        "$value": "{asphalt.50}"
       }
     },
     "text": {
       "primary": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 1)"
+        "$value": "{white.900}"
       },
       "secondary": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 0.8)"
+        "$value": "{white.500}"
       },
       "disabled": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 0.2)"
+        "$value": "{white.200}"
       },
       "inverse": {
         "$type": "color",
-        "$value": "rgba(242, 244, 244, 1)"
+        "$value": "{concrete.50}"
       },
       "on-brand": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 1)"
+        "$value": "{white.900}"
       }
     },
     "border": {
       "subtle": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 0.1)"
+        "$value": "{white.100}"
       },
       "default": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 0.2)"
+        "$value": "{white.200}"
       },
       "strong": {
         "$type": "color",
-        "$value": "rgba(255, 255, 255, 0.4)"
+        "$value": "{white.300}"
       }
     },
     "feedback": {
       "success": {
         "$type": "color",
-        "$value": "rgba(88, 214, 141, 1)"
+        "$value": "{emerald.400}"
       },
       "success-subtle": {
         "$type": "color",
-        "$value": "rgba(234, 250, 241, 1)"
+        "$value": "{emerald.50}"
       },
       "warning": {
         "$type": "color",
-        "$value": "rgba(244, 208, 63, 1)"
+        "$value": "{sunflower.400}"
       },
       "warning-subtle": {
         "$type": "color",
-        "$value": "rgba(254, 249, 231, 1)"
+        "$value": "{sunflower.50}"
       },
       "danger": {
         "$type": "color",
-        "$value": "rgba(236, 112, 99, 1)"
+        "$value": "{alizarin.400}"
       },
       "danger-subtle": {
         "$type": "color",
-        "$value": "rgba(253, 237, 236, 1)"
+        "$value": "{alizarin.50}"
       },
       "info": {
         "$type": "color",
-        "$value": "rgba(93, 173, 226, 1)"
+        "$value": "{peter-river.400}"
       },
       "info-subtle": {
         "$type": "color",
-        "$value": "rgba(234, 242, 248, 1)"
+        "$value": "{belize-hole.50}"
       }
     },
     "rank": {
       "gold": {
         "$type": "color",
-        "$value": "rgba(243, 156, 18, 1)"
+        "$value": "{orange.500}"
       },
       "silver": {
         "$type": "color",
-        "$value": "rgba(178, 186, 187, 1)"
+        "$value": "{concrete.300}"
       },
       "bronze": {
         "$type": "color",
-        "$value": "rgba(230, 126, 34, 1)"
+        "$value": "{carrot.500}"
       }
     }
   }

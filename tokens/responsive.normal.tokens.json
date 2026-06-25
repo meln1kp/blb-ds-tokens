@@ -70,10 +70,6 @@
       "size-large": {
         "$type": "dimension",
         "$value": "{icon.2xl}"
-      },
-      "size-default-2": {
-        "$type": "dimension",
-        "$value": "{icon.xl}"
       }
     },
     "button": {
@@ -115,7 +111,7 @@
     "caption": {
       "font-size": {
         "$type": "dimension",
-        "$value": "{caption.font-size}"
+        "$value": "{caption.size-base}"
       }
     }
   }

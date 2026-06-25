@@ -19,7 +19,7 @@
     "breakpoints": {
       "width-min": {
         "$type": "number",
-        "$value": 320
+        "$value": 360
       },
       "width-max": {
         "$type": "number",
@@ -70,10 +70,6 @@
       "size-large": {
         "$type": "dimension",
         "$value": "{icon.xl}"
-      },
-      "size-default-2": {
-        "$type": "dimension",
-        "$value": "{icon.l}"
       }
     },
     "button": {
@@ -115,7 +111,7 @@
     "caption": {
       "font-size": {
         "$type": "dimension",
-        "$value": "{caption.font-size}"
+        "$value": "{caption.size-base}"
       }
     }
   }
