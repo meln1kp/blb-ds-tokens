@@ -58,10 +58,15 @@ function log(msg, cls) {
   $('log').scrollTop = $('log').scrollHeight;
 }
 
+var _sandboxTimer = null;
+
 // Receive messages from code.js
 window.onmessage = function(event) {
   const msg = event.data && event.data.pluginMessage;
   if (!msg) return;
+
+  // Any message from code.js means the sandbox is alive — cancel the watchdog
+  clearTimeout(_sandboxTimer);
 
   if (msg.type === 'saved-settings') {
     var s = msg.settings;
@@ -117,14 +122,12 @@ function handleSync() {
     }
   } }, '*');
 
-  // If code.js doesn't respond within 3s, surface the error
-  setTimeout(function() {
-    if ($('btn').disabled) {
-      log('No response from plugin sandbox. Try: Remove plugin → Import from manifest again.', 'err');
-      $('btn').disabled = false;
-      $('btn').textContent = 'Sync tokens to GitHub';
-    }
-  }, 3000);
+  // Watchdog: if code.js never responds, surface an error after 10s
+  _sandboxTimer = setTimeout(function() {
+    log('No response from plugin sandbox. Try: Remove plugin → Import from manifest again.', 'err');
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+  }, 10000);
 };
 
 async function pushToGitHub(files) {
