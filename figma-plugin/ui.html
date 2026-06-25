@@ -57,12 +57,15 @@ let files = null;
 
 window.onmessage = ({ data }) => {
   const msg = data.pluginMessage;
-  if (msg?.type !== 'tokens-ready') return;
+  if (!msg || msg.type !== 'tokens-ready') return;
   files = msg.files;
   const n = Object.keys(files).length;
   $('btn').textContent = `Push ${n} file${n !== 1 ? 's' : ''} to GitHub`;
   $('btn').disabled = false;
 };
+
+// Tell code.js the UI is ready — triggers variable processing
+parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
 
 $('btn').onclick = async () => {
   const pat    = $('ghToken').value.trim();

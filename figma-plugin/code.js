@@ -50,53 +50,58 @@ function setPath(obj, parts, val) {
 
 figma.showUI(__html__, { width: 440, height: 380 });
 
-// Build varById lookup
-var allVars = figma.variables.getLocalVariables();
-var varById = {};
-for (var vi = 0; vi < allVars.length; vi++) {
-  varById[allVars[vi].id] = allVars[vi];
-}
+// Wait for UI to signal it's ready before processing variables
+figma.ui.onmessage = function(msg) {
+  if (!msg || msg.type !== 'ui-ready') return;
 
-var files = {};
+  // Build varById lookup
+  var allVars = figma.variables.getLocalVariables();
+  var varById = {};
+  for (var vi = 0; vi < allVars.length; vi++) {
+    varById[allVars[vi].id] = allVars[vi];
+  }
 
-var allCols = figma.variables.getLocalVariableCollections();
-for (var ci = 0; ci < allCols.length; ci++) {
-  var col = allCols[ci];
-  if (col.hiddenFromPublishing) continue;
-  var multiMode = col.modes.length > 1;
+  var files = {};
 
-  for (var mi = 0; mi < col.modes.length; mi++) {
-    var mode = col.modes[mi];
-    var tokens = {};
+  var allCols = figma.variables.getLocalVariableCollections();
+  for (var ci = 0; ci < allCols.length; ci++) {
+    var col = allCols[ci];
+    if (col.hiddenFromPublishing) continue;
+    var multiMode = col.modes.length > 1;
 
-    for (var ii = 0; ii < col.variableIds.length; ii++) {
-      var v = varById[col.variableIds[ii]];
-      if (!v || v.hiddenFromPublishing) continue;
+    for (var mi = 0; mi < col.modes.length; mi++) {
+      var mode = col.modes[mi];
+      var tokens = {};
 
-      var raw = v.valuesByMode[mode.modeId];
-      if (raw == null) continue;
+      for (var ii = 0; ii < col.variableIds.length; ii++) {
+        var v = varById[col.variableIds[ii]];
+        if (!v || v.hiddenFromPublishing) continue;
 
-      var parts = v.name.split('/').map(seg);
-      var def;
+        var raw = v.valuesByMode[mode.modeId];
+        if (raw == null) continue;
 
-      if (raw && raw.type === 'VARIABLE_ALIAS') {
-        var ref = varById[raw.id];
-        if (!ref) continue;
-        def = { $type: dtcgType(v), $value: '{' + ref.name.split('/').map(seg).join('.') + '}' };
-      } else {
-        def = { $type: dtcgType(v), $value: dtcgValue(v, raw) };
+        var parts = v.name.split('/').map(seg);
+        var def;
+
+        if (raw && raw.type === 'VARIABLE_ALIAS') {
+          var ref = varById[raw.id];
+          if (!ref) continue;
+          def = { $type: dtcgType(v), $value: '{' + ref.name.split('/').map(seg).join('.') + '}' };
+        } else {
+          def = { $type: dtcgType(v), $value: dtcgValue(v, raw) };
+        }
+
+        if (v.description) def.$description = v.description;
+        setPath(tokens, parts, def);
       }
 
-      if (v.description) def.$description = v.description;
-      setPath(tokens, parts, def);
+      var filename = multiMode
+        ? slug(col.name) + '.' + slug(mode.name) + '.tokens.json'
+        : slug(col.name) + '.tokens.json';
+
+      files[filename] = JSON.stringify(tokens, null, 2) + '\n';
     }
-
-    var filename = multiMode
-      ? slug(col.name) + '.' + slug(mode.name) + '.tokens.json'
-      : slug(col.name) + '.tokens.json';
-
-    files[filename] = JSON.stringify(tokens, null, 2) + '\n';
   }
-}
 
-figma.ui.postMessage({ type: 'tokens-ready', files });
+  figma.ui.postMessage({ type: 'tokens-ready', files });
+};
