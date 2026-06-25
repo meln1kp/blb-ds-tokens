@@ -7,6 +7,18 @@
     "font-weight": {
       "$type": "number",
       "$value": "{font-weight.bold}"
+    },
+    "font-size": {
+      "$type": "dimension",
+      "$value": "{font-size.09}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.09}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.tighter}"
     }
   },
   "title-page": {
@@ -29,6 +41,14 @@
     "font-weight": {
       "$type": "number",
       "$value": "{font-weight.bold}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.08}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.tight}"
     }
   },
   "subtitle": {
@@ -51,6 +71,14 @@
     "font-weight": {
       "$type": "number",
       "$value": "{font-weight.regular}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.07}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.tight}"
     }
   },
   "heading": {
@@ -73,6 +101,14 @@
     "font-weight": {
       "$type": "number",
       "$value": "{font-weight.semibold}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.06}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.normal}"
     }
   },
   "subheading": {
@@ -95,6 +131,14 @@
     "font-weight": {
       "$type": "number",
       "$value": "{font-weight.regular}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.05}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.normal}"
     }
   },
   "body": {
@@ -104,11 +148,11 @@
     },
     "size-small": {
       "$type": "dimension",
-      "$value": "{font-size.02}"
+      "$value": "{font-size.04}"
     },
     "size-medium": {
       "$type": "dimension",
-      "$value": "{font-size.03}"
+      "$value": "{font-size.04}"
     },
     "size-large": {
       "$type": "dimension",
@@ -125,6 +169,14 @@
     "font-style-italic": {
       "$type": "string",
       "$value": "{font-style.regular-italic}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.04}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.normal}"
     }
   },
   "code": {
@@ -134,19 +186,49 @@
     },
     "size-small": {
       "$type": "dimension",
-      "$value": "{body.size-small}"
+      "$value": "{font-size.03}"
     },
     "size-base": {
       "$type": "dimension",
-      "$value": "{body.size-medium}"
+      "$value": "{font-size.04}"
     },
     "size-large": {
       "$type": "dimension",
-      "$value": "{body.size-large}"
+      "$value": "{font-size.04}"
     },
     "font-weight": {
       "$type": "number",
-      "$value": "{body.font-weight-regular}"
+      "$value": "{font-weight.regular}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.04}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.wide}"
+    }
+  },
+  "caption": {
+    "font-family": {
+      "$type": "string",
+      "$value": "{font-family.sans}"
+    },
+    "font-size": {
+      "$type": "dimension",
+      "$value": "{font-size.02}"
+    },
+    "font-weight": {
+      "$type": "number",
+      "$value": "{font-weight.regular}"
+    },
+    "line-height": {
+      "$type": "dimension",
+      "$value": "{line-height.02}"
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "$value": "{letter-spacing.wide}"
     }
   }
 }

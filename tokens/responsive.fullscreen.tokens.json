@@ -4,7 +4,7 @@
       "$type": "string",
       "$value": "fullscreen"
     },
-    "device-width": {
+    "frame-width": {
       "$type": "dimension",
       "$value": "1200px"
     },
@@ -40,6 +40,14 @@
       "count": {
         "$type": "number",
         "$value": 12
+      },
+      "margin": {
+        "$type": "dimension",
+        "$value": "{space.20}"
+      },
+      "gutter": {
+        "$type": "dimension",
+        "$value": "{space.16}"
       }
     },
     "sidebar": {
@@ -50,6 +58,64 @@
       "collapsed": {
         "$type": "boolean",
         "$value": false
+      }
+    }
+  },
+  "component": {
+    "profile-picture": {
+      "size-default": {
+        "$type": "dimension",
+        "$value": "{icon.l}"
+      },
+      "size-large": {
+        "$type": "dimension",
+        "$value": "{icon.xl}"
+      },
+      "size-default-2": {
+        "$type": "dimension",
+        "$value": "{icon.l}"
+      }
+    },
+    "button": {
+      "height-s": {
+        "$type": "dimension",
+        "$value": "{space.32}"
+      },
+      "height-m": {
+        "$type": "dimension",
+        "$value": "{space.36}"
+      }
+    }
+  },
+  "typography": {
+    "title-page": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{title-page.size-small}"
+      }
+    },
+    "subtitle": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{subtitle.size-base}"
+      }
+    },
+    "heading": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{heading.size-base}"
+      }
+    },
+    "body": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{body.size-large}"
+      }
+    },
+    "caption": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{caption.font-size}"
       }
     }
   }

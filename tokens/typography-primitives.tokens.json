@@ -6,45 +6,45 @@
     },
     "mono": {
       "$type": "string",
-      "$value": "Roboto Mono"
+      "$value": "JetBrains Mono"
     }
   },
   "font-size": {
     "01": {
-      "$type": "number",
-      "$value": 10
+      "$type": "dimension",
+      "$value": "10px"
     },
     "02": {
-      "$type": "number",
-      "$value": 12
+      "$type": "dimension",
+      "$value": "12px"
     },
     "03": {
-      "$type": "number",
-      "$value": 14
+      "$type": "dimension",
+      "$value": "14px"
     },
     "04": {
-      "$type": "number",
-      "$value": 16
+      "$type": "dimension",
+      "$value": "16px"
     },
     "05": {
-      "$type": "number",
-      "$value": 20
+      "$type": "dimension",
+      "$value": "20px"
     },
     "06": {
-      "$type": "number",
-      "$value": 24
+      "$type": "dimension",
+      "$value": "24px"
     },
     "07": {
-      "$type": "number",
-      "$value": 32
+      "$type": "dimension",
+      "$value": "32px"
     },
     "08": {
-      "$type": "number",
-      "$value": 40
+      "$type": "dimension",
+      "$value": "40px"
     },
     "09": {
-      "$type": "number",
-      "$value": 56
+      "$type": "dimension",
+      "$value": "56px"
     }
   },
   "font-weight": {
@@ -89,6 +89,66 @@
     "bold-italic": {
       "$type": "string",
       "$value": "Bold Italic"
+    }
+  },
+  "line-height": {
+    "01": {
+      "$type": "dimension",
+      "$value": "120px"
+    },
+    "02": {
+      "$type": "dimension",
+      "$value": "130px"
+    },
+    "03": {
+      "$type": "dimension",
+      "$value": "140px"
+    },
+    "04": {
+      "$type": "dimension",
+      "$value": "140px"
+    },
+    "05": {
+      "$type": "dimension",
+      "$value": "130px"
+    },
+    "06": {
+      "$type": "dimension",
+      "$value": "125px"
+    },
+    "07": {
+      "$type": "dimension",
+      "$value": "120px"
+    },
+    "08": {
+      "$type": "dimension",
+      "$value": "115px"
+    },
+    "09": {
+      "$type": "dimension",
+      "$value": "110px"
+    }
+  },
+  "letter-spacing": {
+    "tighter": {
+      "$type": "dimension",
+      "$value": "-2px"
+    },
+    "tight": {
+      "$type": "dimension",
+      "$value": "-1px"
+    },
+    "normal": {
+      "$type": "dimension",
+      "$value": "0px"
+    },
+    "wide": {
+      "$type": "dimension",
+      "$value": "1px"
+    },
+    "wider": {
+      "$type": "dimension",
+      "$value": "2px"
     }
   }
 }

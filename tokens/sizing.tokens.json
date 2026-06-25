@@ -34,17 +34,9 @@
       "$type": "dimension",
       "$value": "2px"
     },
-    "3": {
-      "$type": "dimension",
-      "$value": "3px"
-    },
     "4": {
       "$type": "dimension",
       "$value": "4px"
-    },
-    "5": {
-      "$type": "dimension",
-      "$value": "5px"
     },
     "6": {
       "$type": "dimension",
