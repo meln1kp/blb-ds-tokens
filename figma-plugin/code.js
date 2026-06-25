@@ -48,6 +48,24 @@ function setPath(obj, parts, val) {
   cur[parts[parts.length - 1]] = val;
 }
 
+// Resolve a raw value, following VARIABLE_ALIAS chains.
+// If the referenced variable is hidden from publishing, inline its actual value
+// rather than emitting a broken DTCG reference.
+function resolveRaw(varObj, raw, varById) {
+  if (!raw || raw.type !== 'VARIABLE_ALIAS') {
+    return { type: 'value', value: dtcgValue(varObj, raw) };
+  }
+  var ref = varById[raw.id];
+  if (!ref) return null;
+  if (ref.hiddenFromPublishing) {
+    var modeIds = Object.keys(ref.valuesByMode);
+    if (!modeIds.length) return null;
+    var refRaw = ref.valuesByMode[modeIds[0]];
+    return resolveRaw(ref, refRaw, varById);
+  }
+  return { type: 'ref', path: ref.name.split('/').map(seg).join('.') };
+}
+
 figma.showUI(__html__, { width: 440, height: 460 });
 
 // UI sends 'fetch' when the button is clicked — we respond with the token files
@@ -83,12 +101,12 @@ figma.ui.on('message', function(msg) {
           var parts = v.name.split('/').map(seg);
           var def;
 
-          if (raw && raw.type === 'VARIABLE_ALIAS') {
-            var ref = varById[raw.id];
-            if (!ref) continue;
-            def = { $type: dtcgType(v), $value: '{' + ref.name.split('/').map(seg).join('.') + '}' };
+          var result = resolveRaw(v, raw, varById);
+          if (!result) continue;
+          if (result.type === 'ref') {
+            def = { $type: dtcgType(v), $value: '{' + result.path + '}' };
           } else {
-            def = { $type: dtcgType(v), $value: dtcgValue(v, raw) };
+            def = { $type: dtcgType(v), $value: result.value };
           }
 
           if (v.description) def.$description = v.description;

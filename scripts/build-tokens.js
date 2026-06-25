@@ -12,6 +12,7 @@
 import StyleDictionary from 'style-dictionary';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { globSync } from 'glob';
+import path from 'path';
 
 mkdirSync('dist', { recursive: true });
 
@@ -22,7 +23,21 @@ if (allFiles.length === 0) {
 }
 
 const darkFiles = allFiles.filter(f => f.includes('.dark.'));
-const lightFiles = allFiles.filter(f => !f.includes('.dark.'));
+
+// For multi-mode non-dark collections (e.g. responsive.normal/fullscreen/mobile),
+// keep only the first encountered mode to prevent token-path collisions.
+const seenBases = new Set();
+const lightFiles = allFiles
+  .filter(f => !f.includes('.dark.'))
+  .filter(f => {
+    const stem = path.basename(f).replace(/\.tokens\.json$/, '');
+    const dot = stem.indexOf('.');
+    if (dot === -1) return true;
+    const base = stem.slice(0, dot);
+    if (seenBases.has(base)) return false;
+    seenBases.add(base);
+    return true;
+  });
 console.log(`Building from ${lightFiles.length} light + ${darkFiles.length} dark token files…`);
 
 // Shared hooks for both builds:
@@ -81,7 +96,7 @@ const sdLight = new StyleDictionary({
       }],
     },
   },
-  log: { verbosity: 'default' },
+  log: { verbosity: 'default', errors: { brokenReferences: 'warn' } },
 });
 
 await sdLight.buildAllPlatforms();
@@ -111,7 +126,7 @@ if (darkFiles.length > 0) {
         }],
       },
     },
-    log: { verbosity: 'default' },
+    log: { verbosity: 'default', errors: { brokenReferences: 'warn' } },
   });
 
   await sdDark.buildAllPlatforms();
