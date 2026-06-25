@@ -1,0 +1,18 @@
+{
+  "name": "blb-ds-tokens",
+  "version": "1.0.0",
+  "description": "Design system tokens for bloob.io",
+  "type": "module",
+  "scripts": {
+    "fetch": "node scripts/fetch-tokens.js",
+    "build": "node scripts/build-tokens.js",
+    "sync": "npm run fetch && npm run build"
+  },
+  "dependencies": {
+    "glob": "^11.0.0",
+    "style-dictionary": "^4.3.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
