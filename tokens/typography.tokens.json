@@ -111,7 +111,7 @@
       "$value": "{letter-spacing.normal}"
     }
   },
-  "subheading": {
+  "label": {
     "font-family": {
       "$type": "string",
       "$value": "{font-family.sans}"
@@ -214,7 +214,7 @@
       "$type": "string",
       "$value": "{font-family.sans}"
     },
-    "font-size": {
+    "size-base": {
       "$type": "dimension",
       "$value": "{font-size.02}"
     },
@@ -229,6 +229,14 @@
     "letter-spacing": {
       "$type": "dimension",
       "$value": "{letter-spacing.wide}"
+    },
+    "size-large": {
+      "$type": "dimension",
+      "$value": "{font-size.03}"
+    },
+    "size-small": {
+      "$type": "dimension",
+      "$value": "{font-size.01}"
     }
   }
 }
