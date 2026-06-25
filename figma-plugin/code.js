@@ -48,21 +48,15 @@ function setPath(obj, parts, val) {
   cur[parts[parts.length - 1]] = val;
 }
 
-// Resolve a raw value, following VARIABLE_ALIAS chains.
-// If the referenced variable is hidden from publishing, inline its actual value
-// rather than emitting a broken DTCG reference.
+// Resolve a raw value: if it's a VARIABLE_ALIAS, return the DTCG reference path;
+// otherwise return the computed value. All variables are exported regardless of
+// hiddenFromPublishing, so aliases always have something to point at.
 function resolveRaw(varObj, raw, varById) {
   if (!raw || raw.type !== 'VARIABLE_ALIAS') {
     return { type: 'value', value: dtcgValue(varObj, raw) };
   }
   var ref = varById[raw.id];
   if (!ref) return null;
-  if (ref.hiddenFromPublishing) {
-    var modeIds = Object.keys(ref.valuesByMode);
-    if (!modeIds.length) return null;
-    var refRaw = ref.valuesByMode[modeIds[0]];
-    return resolveRaw(ref, refRaw, varById);
-  }
   return { type: 'ref', path: ref.name.split('/').map(seg).join('.') };
 }
 
