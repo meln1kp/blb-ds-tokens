@@ -25,6 +25,12 @@ jobs:
       - name: Install dependencies
         run: npm install --no-fund --no-audit
 
+      - name: Check secrets and variables
+        run: |
+          echo "FIGMA_TOKEN set:    ${{ secrets.FIGMA_TOKEN != '' }}"
+          echo "FIGMA_FILE_KEY set: ${{ vars.FIGMA_FILE_KEY != '' }}"
+          echo "FIGMA_FILE_KEY val: ${{ vars.FIGMA_FILE_KEY }}"
+
       - name: Fetch tokens from Figma
         run: node scripts/fetch-tokens.js
         env:
