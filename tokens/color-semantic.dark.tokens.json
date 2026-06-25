@@ -3,145 +3,145 @@
     "brand": {
       "default": {
         "$type": "color",
-        "$value": "{emerald.400}"
+        "$value": "#58d68d"
       },
       "emphasis": {
         "$type": "color",
-        "$value": "{emerald.500}"
+        "$value": "#2ecc71"
       },
       "subtle": {
         "$type": "color",
-        "$value": "{emerald.50}"
+        "$value": "#eafaf1"
       }
     },
     "interactive": {
       "default": {
         "$type": "color",
-        "$value": "{peter-river.400}"
+        "$value": "#5dade2"
       },
       "hover": {
         "$type": "color",
-        "$value": "{peter-river.500}"
+        "$value": "#3498db"
       }
     },
     "accent": {
       "default": {
         "$type": "color",
-        "$value": "{carrot.400}"
+        "$value": "#eb984e"
       },
       "hover": {
         "$type": "color",
-        "$value": "{carrot.500}"
+        "$value": "#e67e22"
       },
       "subtle": {
         "$type": "color",
-        "$value": "{carrot.50}"
+        "$value": "#fdf2e9"
       }
     },
     "surface": {
       "base": {
         "$type": "color",
-        "$value": "{asphalt.800}"
+        "$value": "#212f3c"
       },
       "raised": {
         "$type": "color",
-        "$value": "{asphalt.700}"
+        "$value": "#283747"
       },
       "overlay": {
         "$type": "color",
-        "$value": "{asphalt.900}"
+        "$value": "#1b2631"
       },
       "sunken": {
         "$type": "color",
-        "$value": "{black.900}"
+        "$value": "#0c0c0d"
       },
       "inverted": {
         "$type": "color",
-        "$value": "{asphalt.50}"
+        "$value": "#ebedef"
       }
     },
     "text": {
       "primary": {
         "$type": "color",
-        "$value": "{white.900}"
+        "$value": "#ffffff"
       },
       "secondary": {
         "$type": "color",
-        "$value": "{white.500}"
+        "$value": "#ffffffcc"
       },
       "disabled": {
         "$type": "color",
-        "$value": "{white.200}"
+        "$value": "#ffffff33"
       },
       "inverse": {
         "$type": "color",
-        "$value": "{concrete.50}"
+        "$value": "#f2f4f4"
       },
       "on-brand": {
         "$type": "color",
-        "$value": "{white.900}"
+        "$value": "#ffffff"
       }
     },
     "border": {
       "subtle": {
         "$type": "color",
-        "$value": "{white.100}"
+        "$value": "#ffffff1a"
       },
       "default": {
         "$type": "color",
-        "$value": "{white.200}"
+        "$value": "#ffffff33"
       },
       "strong": {
         "$type": "color",
-        "$value": "{white.300}"
+        "$value": "#ffffff66"
       }
     },
     "feedback": {
       "success": {
         "$type": "color",
-        "$value": "{emerald.400}"
+        "$value": "#58d68d"
       },
       "success-subtle": {
         "$type": "color",
-        "$value": "{emerald.50}"
+        "$value": "#eafaf1"
       },
       "warning": {
         "$type": "color",
-        "$value": "{sunflower.400}"
+        "$value": "#f4d03f"
       },
       "warning-subtle": {
         "$type": "color",
-        "$value": "{sunflower.50}"
+        "$value": "#fef9e7"
       },
       "danger": {
         "$type": "color",
-        "$value": "{alizarin.400}"
+        "$value": "#ec7063"
       },
       "danger-subtle": {
         "$type": "color",
-        "$value": "{alizarin.50}"
+        "$value": "#fdedec"
       },
       "info": {
         "$type": "color",
-        "$value": "{peter-river.400}"
+        "$value": "#5dade2"
       },
       "info-subtle": {
         "$type": "color",
-        "$value": "{belize-hole.50}"
+        "$value": "#eaf2f8"
       }
     },
     "rank": {
       "gold": {
         "$type": "color",
-        "$value": "{orange.500}"
+        "$value": "#f39c12"
       },
       "silver": {
         "$type": "color",
-        "$value": "{concrete.300}"
+        "$value": "#b2babb"
       },
       "bronze": {
         "$type": "color",
-        "$value": "{carrot.500}"
+        "$value": "#e67e22"
       }
     }
   }
