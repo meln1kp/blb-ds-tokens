@@ -63,6 +63,14 @@ window.onmessage = function(event) {
   const msg = event.data && event.data.pluginMessage;
   if (!msg) return;
 
+  if (msg.type === 'saved-settings') {
+    var s = msg.settings;
+    ['ghToken', 'repo', 'branch', 'folder'].forEach(function(k) {
+      if (s[k]) $(k).value = s[k];
+    });
+    return;
+  }
+
   if (msg.type === 'error') {
     log('Error reading variables: ' + msg.message, 'err');
     $('btn').disabled = false;
@@ -98,8 +106,16 @@ function handleSync() {
   $('log').innerHTML = '';
   log('Fetching variables from Figma…');
 
-  // Ask code.js to read the variables
-  parent.postMessage({ pluginMessage: { type: 'fetch' } }, '*');
+  // Ask code.js to read the variables (settings are saved there for next open)
+  parent.postMessage({ pluginMessage: {
+    type: 'fetch',
+    settings: {
+      ghToken: $('ghToken').value.trim(),
+      repo:    $('repo').value.trim(),
+      branch:  $('branch').value.trim() || 'main',
+      folder:  $('folder').value.trim() || 'tokens',
+    }
+  } }, '*');
 
   // If code.js doesn't respond within 3s, surface the error
   setTimeout(function() {

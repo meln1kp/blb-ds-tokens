@@ -68,9 +68,19 @@ function resolveRaw(varObj, raw, varById) {
 
 figma.showUI(__html__, { width: 440, height: 460 });
 
+// Restore saved settings on startup so the UI fields are pre-filled
+figma.clientStorage.getAsync('settings').then(function(saved) {
+  if (saved) figma.ui.postMessage({ type: 'saved-settings', settings: saved });
+});
+
 // UI sends 'fetch' when the button is clicked — we respond with the token files
 figma.ui.on('message', function(msg) {
   if (!msg || msg.type !== 'fetch') return;
+
+  // Persist settings so they are restored on next open
+  if (msg.settings) {
+    figma.clientStorage.setAsync('settings', msg.settings);
+  }
 
   try {
     var allVars = figma.variables.getLocalVariables();
