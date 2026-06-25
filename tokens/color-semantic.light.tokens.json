@@ -1,0 +1,148 @@
+{
+  "color": {
+    "brand": {
+      "default": {
+        "$type": "color",
+        "$value": "rgba(46, 204, 113, 1)"
+      },
+      "emphasis": {
+        "$type": "color",
+        "$value": "rgba(40, 180, 99, 1)"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "rgba(35, 155, 86, 1)"
+      }
+    },
+    "interactive": {
+      "default": {
+        "$type": "color",
+        "$value": "rgba(52, 152, 219, 1)"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "rgba(46, 134, 193, 1)"
+      }
+    },
+    "accent": {
+      "default": {
+        "$type": "color",
+        "$value": "rgba(230, 126, 34, 1)"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "rgba(211, 84, 0, 1)"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "rgba(186, 74, 0, 1)"
+      }
+    },
+    "surface": {
+      "base": {
+        "$type": "color",
+        "$value": "rgba(52, 73, 94, 1)"
+      },
+      "raised": {
+        "$type": "color",
+        "$value": "rgba(93, 109, 126, 1)"
+      },
+      "overlay": {
+        "$type": "color",
+        "$value": "rgba(46, 64, 83, 1)"
+      },
+      "sunken": {
+        "$type": "color",
+        "$value": "rgba(27, 38, 49, 1)"
+      },
+      "inverted": {
+        "$type": "color",
+        "$value": "rgba(12, 12, 13, 1)"
+      }
+    },
+    "text": {
+      "primary": {
+        "$type": "color",
+        "$value": "rgba(242, 244, 244, 1)"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "rgba(204, 209, 209, 1)"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "rgba(127, 140, 141, 1)"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "rgba(52, 73, 94, 1)"
+      },
+      "on-brand": {
+        "$type": "color",
+        "$value": "rgba(255, 255, 255, 1)"
+      }
+    },
+    "border": {
+      "subtle": {
+        "$type": "color",
+        "$value": "rgba(12, 12, 13, 0.2)"
+      },
+      "default": {
+        "$type": "color",
+        "$value": "rgba(12, 12, 13, 0.4)"
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "rgba(12, 12, 13, 0.7)"
+      }
+    },
+    "feedback": {
+      "success": {
+        "$type": "color",
+        "$value": "rgba(46, 204, 113, 1)"
+      },
+      "success-subtle": {
+        "$type": "color",
+        "$value": "rgba(213, 245, 227, 1)"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "rgba(241, 196, 15, 1)"
+      },
+      "warning-subtle": {
+        "$type": "color",
+        "$value": "rgba(125, 102, 8, 1)"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "rgba(231, 76, 60, 1)"
+      },
+      "danger-subtle": {
+        "$type": "color",
+        "$value": "rgba(120, 40, 31, 1)"
+      },
+      "info": {
+        "$type": "color",
+        "$value": "rgba(52, 152, 219, 1)"
+      },
+      "info-subtle": {
+        "$type": "color",
+        "$value": "rgba(46, 134, 193, 1)"
+      }
+    },
+    "rank": {
+      "gold": {
+        "$type": "color",
+        "$value": "rgba(185, 119, 14, 1)"
+      },
+      "silver": {
+        "$type": "color",
+        "$value": "rgba(153, 163, 164, 1)"
+      },
+      "bronze": {
+        "$type": "color",
+        "$value": "rgba(175, 96, 26, 1)"
+      }
+    }
+  }
+}

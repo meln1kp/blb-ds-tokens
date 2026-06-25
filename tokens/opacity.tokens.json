@@ -1,0 +1,24 @@
+{
+  "opacity": {
+    "faint": {
+      "$type": "string",
+      "$value": "0.08"
+    },
+    "subtle": {
+      "$type": "string",
+      "$value": "0.16"
+    },
+    "medium": {
+      "$type": "string",
+      "$value": "0.32"
+    },
+    "strong": {
+      "$type": "string",
+      "$value": "0.48"
+    },
+    "scrim": {
+      "$type": "string",
+      "$value": "0.64"
+    }
+  }
+}

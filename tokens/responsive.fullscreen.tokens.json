@@ -1,0 +1,122 @@
+{
+  "viewport": {
+    "device": {
+      "$type": "string",
+      "$value": "fullscreen"
+    },
+    "frame-width": {
+      "$type": "dimension",
+      "$value": "1200px"
+    },
+    "root-font-size": {
+      "$type": "number",
+      "$value": "{font-size.03}"
+    },
+    "scale": {
+      "$type": "number",
+      "$value": 1
+    },
+    "breakpoints": {
+      "width-min": {
+        "$type": "number",
+        "$value": 871
+      },
+      "width-max": {
+        "$type": "number",
+        "$value": 1920
+      },
+      "height-min": {
+        "$type": "number",
+        "$value": 510
+      },
+      "height-max": {
+        "$type": "number",
+        "$value": 599
+      }
+    }
+  },
+  "layout": {
+    "columns": {
+      "count": {
+        "$type": "number",
+        "$value": 12
+      },
+      "margin": {
+        "$type": "dimension",
+        "$value": "{space.20}"
+      },
+      "gutter": {
+        "$type": "dimension",
+        "$value": "{space.16}"
+      }
+    },
+    "sidebar": {
+      "width": {
+        "$type": "dimension",
+        "$value": "240px"
+      },
+      "collapsed": {
+        "$type": "boolean",
+        "$value": false
+      }
+    }
+  },
+  "component": {
+    "profile-picture": {
+      "size-default": {
+        "$type": "dimension",
+        "$value": "{icon.l}"
+      },
+      "size-large": {
+        "$type": "dimension",
+        "$value": "{icon.xl}"
+      },
+      "size-default-2": {
+        "$type": "dimension",
+        "$value": "{icon.l}"
+      }
+    },
+    "button": {
+      "height-s": {
+        "$type": "dimension",
+        "$value": "{space.32}"
+      },
+      "height-m": {
+        "$type": "dimension",
+        "$value": "{space.36}"
+      }
+    }
+  },
+  "typography": {
+    "title-page": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{title-page.size-small}"
+      }
+    },
+    "subtitle": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{subtitle.size-base}"
+      }
+    },
+    "heading": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{heading.size-base}"
+      }
+    },
+    "body": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{body.size-large}"
+      }
+    },
+    "caption": {
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{caption.font-size}"
+      }
+    }
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  body { font: 13px/1.5 -apple-system, sans-serif; padding: 16px; margin: 0; color: #333; }
+  label { display: block; margin-bottom: 10px; }
+  label span { display: block; font-size: 11px; color: #666; margin-bottom: 3px; }
+  input { width: 100%; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+  button { width: 100%; margin-top: 14px; padding: 8px 0; background: #18a0fb; color: #fff;
+           border: none; border-radius: 4px; font: 13px sans-serif; cursor: pointer; }
+  button:disabled { background: #bbb; cursor: default; }
+  #log { margin-top: 12px; max-height: 130px; overflow-y: auto;
+         font: 11px/1.4 monospace; color: #555; }
+  .err { color: #c00; }
+  .ok  { color: #080; }
+</style>
+</head>
+<body>
+
+<label>
+  <span>GitHub Token — PAT with <code>contents:write</code></span>
+  <input id="ghToken" type="password" placeholder="ghp_…">
+</label>
+<label>
+  <span>Repository</span>
+  <input id="repo" placeholder="owner/repo">
+</label>
+<label>
+  <span>Branch</span>
+  <input id="branch" placeholder="main">
+</label>
+<label>
+  <span>Tokens folder</span>
+  <input id="folder" placeholder="tokens">
+</label>
+
+<button id="btn" onclick="handleSync()">Sync tokens to GitHub</button>
+<div id="log"></div>
+
+<script>
+// Catch any JS error and show it visibly
+window.onerror = function(msg, src, line) {
+  document.getElementById('log').innerHTML = '<div style="color:#c00">JS Error line ' + line + ': ' + msg + '</div>';
+};
+
+var DEFAULTS = { branch: 'main', folder: 'tokens', repo: 'meln1kp/blb-ds-tokens' };
+var $ = function(id) { return document.getElementById(id); };
+
+['ghToken', 'repo', 'branch', 'folder'].forEach(function(k) {
+  $(k).value = DEFAULTS[k] || '';
+});
+
+function log(msg, cls) {
+  const d = Object.assign(document.createElement('div'), { textContent: msg, className: cls || '' });
+  $('log').append(d);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+
+var _sandboxTimer = null;
+
+// Receive messages from code.js
+window.onmessage = function(event) {
+  const msg = event.data && event.data.pluginMessage;
+  if (!msg) return;
+
+  // Any message from code.js means the sandbox is alive — cancel the watchdog
+  clearTimeout(_sandboxTimer);
+
+  if (msg.type === 'saved-settings') {
+    var s = msg.settings;
+    ['ghToken', 'repo', 'branch', 'folder'].forEach(function(k) {
+      if (s[k]) $(k).value = s[k];
+    });
+    return;
+  }
+
+  if (msg.type === 'error') {
+    log('Error reading variables: ' + msg.message, 'err');
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+    return;
+  }
+
+  if (msg.type !== 'tokens-ready') return;
+
+  const files = msg.files;
+  const n = Object.keys(files).length;
+
+  if (n === 0) {
+    log('No variables found in this file.', 'err');
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+    return;
+  }
+
+  log('Found ' + n + ' token file' + (n !== 1 ? 's' : '') + '. Pushing to GitHub…');
+  pushToGitHub(files);
+};
+
+function handleSync() {
+  const pat  = $('ghToken').value.trim();
+  const repo = $('repo').value.trim();
+  if (!pat) { $('ghToken').style.borderColor = '#c00'; log('GitHub token is required.', 'err'); return; }
+  if (!repo) { $('repo').style.borderColor = '#c00'; log('Repository is required (e.g. meln1kp/blb-ds-tokens).', 'err'); return; }
+  $('ghToken').style.borderColor = ''; $('repo').style.borderColor = '';
+
+  $('btn').disabled = true;
+  $('btn').textContent = 'Reading variables…';
+  $('log').innerHTML = '';
+  log('Fetching variables from Figma…');
+
+  // Ask code.js to read the variables (settings are saved there for next open)
+  parent.postMessage({ pluginMessage: {
+    type: 'fetch',
+    settings: {
+      ghToken: $('ghToken').value.trim(),
+      repo:    $('repo').value.trim(),
+      branch:  $('branch').value.trim() || 'main',
+      folder:  $('folder').value.trim() || 'tokens',
+    }
+  } }, '*');
+
+  // Watchdog: if code.js never responds, surface an error after 10s
+  _sandboxTimer = setTimeout(function() {
+    log('No response from plugin sandbox. Try: Remove plugin → Import from manifest again.', 'err');
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+  }, 10000);
+};
+
+async function pushToGitHub(files) {
+  const pat    = $('ghToken').value.trim();
+  const repo   = $('repo').value.trim();
+  const branch = $('branch').value.trim() || 'main';
+  const folder = ($('folder').value.trim() || 'tokens').replace(/\/$/, '');
+
+  const gh = async function(path, opts) {
+    opts = opts || {};
+    const res = await fetch('https://api.github.com/repos/' + repo + path, {
+      method: opts.method || 'GET',
+      headers: {
+        Authorization: 'Bearer ' + pat,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+    if (!res.ok) throw new Error('GitHub ' + res.status + ' on ' + path + ': ' + await res.text());
+    return res.json();
+  };
+
+  try {
+    log('Fetching branch ref…');
+    const refData    = await gh('/git/ref/heads/' + branch);
+    const baseSha    = refData.object.sha;
+    const commitData = await gh('/git/commits/' + baseSha);
+    const baseTree   = commitData.tree.sha;
+
+    log('Creating ' + Object.keys(files).length + ' blob(s)…');
+    const tree = [];
+    const names = Object.keys(files);
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
+      const blobData = await gh('/git/blobs', { method: 'POST', body: { content: files[name], encoding: 'utf-8' } });
+      tree.push({ path: folder + '/' + name, mode: '100644', type: 'blob', sha: blobData.sha });
+    }
+
+    log('Committing…');
+    const treeData   = await gh('/git/trees', { method: 'POST', body: { base_tree: baseTree, tree: tree } });
+    const commitRes  = await gh('/git/commits', { method: 'POST', body: {
+      message: 'chore: sync tokens from Figma (' + new Date().toISOString().slice(0, 10) + ')',
+      tree: treeData.sha,
+      parents: [baseSha],
+    }});
+    await gh('/git/refs/heads/' + branch, { method: 'PATCH', body: { sha: commitRes.sha } });
+
+    log('✓ ' + Object.keys(files).length + ' file(s) pushed to ' + repo + ' @ ' + branch, 'ok');
+    log('  ' + Object.keys(files).join('  '), 'ok');
+  } catch (e) {
+    log(e.message, 'err');
+  } finally {
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+  }
+}
+</script>
+</body>
+</html>
