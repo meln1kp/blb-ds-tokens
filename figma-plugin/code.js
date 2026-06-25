@@ -1,11 +1,14 @@
-// Figma plugin sandbox — reads variables, converts to DTCG JSON, hands off to UI for push
+// Figma plugin sandbox — ES6 only (no ??, ?., ??=, .at(), Object.fromEntries)
 
-function rgbToHex({ r, g, b, a = 1 }) {
-  const h = x => Math.round(x * 255).toString(16).padStart(2, '0');
-  return a < 1 ? `#${h(r)}${h(g)}${h(b)}${h(a)}` : `#${h(r)}${h(g)}${h(b)}`;
+function rgbToHex(color) {
+  var a = (color.a !== undefined) ? color.a : 1;
+  var h = function(x) { return Math.round(x * 255).toString(16).padStart(2, '0'); };
+  return a < 1
+    ? '#' + h(color.r) + h(color.g) + h(color.b) + h(a)
+    : '#' + h(color.r) + h(color.g) + h(color.b);
 }
 
-const DIM_SCOPES = new Set([
+var DIM_SCOPES = new Set([
   'GAP', 'WIDTH_HEIGHT', 'CORNER_RADIUS', 'STROKE_FLOAT',
   'PARAGRAPH_INDENT', 'PARAGRAPH_SPACING', 'LETTER_SPACING', 'FONT_SIZE', 'LINE_HEIGHT',
 ]);
@@ -14,24 +17,31 @@ function dtcgType(v) {
   if (v.resolvedType === 'COLOR')   return 'color';
   if (v.resolvedType === 'STRING')  return 'string';
   if (v.resolvedType === 'BOOLEAN') return 'boolean';
-  if (v.resolvedType === 'FLOAT')
-    return (v.scopes ?? []).some(s => DIM_SCOPES.has(s)) ? 'dimension' : 'number';
+  if (v.resolvedType === 'FLOAT') {
+    var scopes = v.scopes || [];
+    return scopes.some(function(s) { return DIM_SCOPES.has(s); }) ? 'dimension' : 'number';
+  }
 }
 
 function dtcgValue(v, raw) {
   if (v.resolvedType === 'COLOR')   return rgbToHex(raw);
   if (v.resolvedType === 'STRING')  return String(raw);
   if (v.resolvedType === 'BOOLEAN') return Boolean(raw);
-  if (v.resolvedType === 'FLOAT')   return dtcgType(v) === 'dimension' ? `${raw}px` : raw;
+  if (v.resolvedType === 'FLOAT')   return dtcgType(v) === 'dimension' ? (raw + 'px') : raw;
   return raw;
 }
 
-const slug = s => s.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const seg  = s => s.trim().replace(/\s+/g, '-');
+function slug(s) {
+  return s.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function seg(s) {
+  return s.trim().replace(/\s+/g, '-');
+}
 
 function setPath(obj, parts, val) {
-  let cur = obj;
-  for (let i = 0; i < parts.length - 1; i++) {
+  var cur = obj;
+  for (var i = 0; i < parts.length - 1; i++) {
     if (!cur[parts[i]]) cur[parts[i]] = {};
     cur = cur[parts[i]];
   }
@@ -40,30 +50,39 @@ function setPath(obj, parts, val) {
 
 figma.showUI(__html__, { width: 440, height: 380 });
 
-const varById = Object.fromEntries(figma.variables.getLocalVariables().map(v => [v.id, v]));
-const files   = {};
+// Build varById lookup
+var allVars = figma.variables.getLocalVariables();
+var varById = {};
+for (var vi = 0; vi < allVars.length; vi++) {
+  varById[allVars[vi].id] = allVars[vi];
+}
 
-for (const col of figma.variables.getLocalVariableCollections()) {
+var files = {};
+
+var allCols = figma.variables.getLocalVariableCollections();
+for (var ci = 0; ci < allCols.length; ci++) {
+  var col = allCols[ci];
   if (col.hiddenFromPublishing) continue;
-  const multiMode = col.modes.length > 1;
+  var multiMode = col.modes.length > 1;
 
-  for (const mode of col.modes) {
-    const tokens = {};
+  for (var mi = 0; mi < col.modes.length; mi++) {
+    var mode = col.modes[mi];
+    var tokens = {};
 
-    for (const varId of col.variableIds) {
-      const v = varById[varId];
+    for (var ii = 0; ii < col.variableIds.length; ii++) {
+      var v = varById[col.variableIds[ii]];
       if (!v || v.hiddenFromPublishing) continue;
 
-      const raw = v.valuesByMode[mode.modeId];
+      var raw = v.valuesByMode[mode.modeId];
       if (raw == null) continue;
 
-      const parts = v.name.split('/').map(seg);
-      let def;
+      var parts = v.name.split('/').map(seg);
+      var def;
 
-      if (raw?.type === 'VARIABLE_ALIAS') {
-        const ref = varById[raw.id];
+      if (raw && raw.type === 'VARIABLE_ALIAS') {
+        var ref = varById[raw.id];
         if (!ref) continue;
-        def = { $type: dtcgType(v), $value: `{${ref.name.split('/').map(seg).join('.')}}` };
+        def = { $type: dtcgType(v), $value: '{' + ref.name.split('/').map(seg).join('.') + '}' };
       } else {
         def = { $type: dtcgType(v), $value: dtcgValue(v, raw) };
       }
@@ -72,9 +91,9 @@ for (const col of figma.variables.getLocalVariableCollections()) {
       setPath(tokens, parts, def);
     }
 
-    const filename = multiMode
-      ? `${slug(col.name)}.${slug(mode.name)}.tokens.json`
-      : `${slug(col.name)}.tokens.json`;
+    var filename = multiMode
+      ? slug(col.name) + '.' + slug(mode.name) + '.tokens.json'
+      : slug(col.name) + '.tokens.json';
 
     files[filename] = JSON.stringify(tokens, null, 2) + '\n';
   }
