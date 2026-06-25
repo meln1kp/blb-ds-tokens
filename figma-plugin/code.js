@@ -103,7 +103,7 @@ figma.ui.on('message', function(msg) {
 
         for (var ii = 0; ii < col.variableIds.length; ii++) {
           var v = varById[col.variableIds[ii]];
-          if (!v || v.hiddenFromPublishing) continue;
+          if (!v) continue;
 
           var raw = v.valuesByMode[mode.modeId];
           if (raw == null) continue;
