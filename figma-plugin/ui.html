@@ -11,7 +11,7 @@
   button { width: 100%; margin-top: 14px; padding: 8px 0; background: #18a0fb; color: #fff;
            border: none; border-radius: 4px; font: 13px sans-serif; cursor: pointer; }
   button:disabled { background: #bbb; cursor: default; }
-  #log { margin-top: 12px; max-height: 120px; overflow-y: auto;
+  #log { margin-top: 12px; max-height: 130px; overflow-y: auto;
          font: 11px/1.4 monospace; color: #555; }
   .err { color: #c00; }
   .ok  { color: #080; }
@@ -36,7 +36,7 @@
   <input id="folder" placeholder="tokens">
 </label>
 
-<button id="btn" disabled>Waiting for tokens…</button>
+<button id="btn">Sync tokens to GitHub</button>
 <div id="log"></div>
 
 <script>
@@ -44,91 +44,115 @@ const DEFAULTS = { branch: 'main', folder: 'tokens', repo: 'meln1kp/blb-ds-token
 const $ = id => document.getElementById(id);
 
 ['ghToken', 'repo', 'branch', 'folder'].forEach(k => {
-  $(k).value = localStorage.getItem(k) ?? DEFAULTS[k] ?? '';
+  $(k).value = localStorage.getItem(k) || DEFAULTS[k] || '';
 });
 
 function log(msg, cls) {
-  const d = Object.assign(document.createElement('div'), { textContent: msg, className: cls ?? '' });
+  const d = Object.assign(document.createElement('div'), { textContent: msg, className: cls || '' });
   $('log').append(d);
   $('log').scrollTop = $('log').scrollHeight;
 }
 
-let files = null;
+// Receive messages from code.js
+window.onmessage = function(event) {
+  const msg = event.data && event.data.pluginMessage;
+  if (!msg) return;
 
-window.onmessage = ({ data }) => {
-  const msg = data.pluginMessage;
-  if (!msg || msg.type !== 'tokens-ready') return;
-  files = msg.files;
+  if (msg.type === 'error') {
+    log('Error reading variables: ' + msg.message, 'err');
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+    return;
+  }
+
+  if (msg.type !== 'tokens-ready') return;
+
+  const files = msg.files;
   const n = Object.keys(files).length;
-  $('btn').textContent = `Push ${n} file${n !== 1 ? 's' : ''} to GitHub`;
-  $('btn').disabled = false;
+
+  if (n === 0) {
+    log('No variables found in this file.', 'err');
+    $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
+    return;
+  }
+
+  log('Found ' + n + ' token file' + (n !== 1 ? 's' : '') + '. Pushing to GitHub…');
+  pushToGitHub(files);
 };
 
-// Tell code.js the UI is ready — triggers variable processing
-parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
-
-$('btn').onclick = async () => {
-  const pat    = $('ghToken').value.trim();
-  const repo   = $('repo').value.trim();
-  const branch = $('branch').value.trim() || 'main';
-  const folder = $('folder').value.trim().replace(/\/$/, '') || 'tokens';
+$('btn').onclick = function() {
+  const pat  = $('ghToken').value.trim();
+  const repo = $('repo').value.trim();
+  if (!pat || !repo) { log('GitHub token and repo are required.', 'err'); return; }
 
   ['ghToken', 'repo', 'branch', 'folder'].forEach(k => localStorage.setItem(k, $(k).value));
 
-  if (!pat || !repo) { log('GitHub token and repo are required.', 'err'); return; }
-
   $('btn').disabled = true;
+  $('btn').textContent = 'Reading variables…';
   $('log').innerHTML = '';
+  log('Fetching variables from Figma…');
 
-  // Thin wrapper: POST/PATCH/GET to GitHub REST API
-  const gh = async (path, opts = {}) => {
-    const res = await fetch(`https://api.github.com/repos/${repo}${path}`, {
-      ...opts,
+  // Ask code.js to read the variables
+  parent.postMessage({ pluginMessage: { type: 'fetch' } }, '*');
+};
+
+async function pushToGitHub(files) {
+  const pat    = $('ghToken').value.trim();
+  const repo   = $('repo').value.trim();
+  const branch = $('branch').value.trim() || 'main';
+  const folder = ($('folder').value.trim() || 'tokens').replace(/\/$/, '');
+
+  const gh = async function(path, opts) {
+    opts = opts || {};
+    const res = await fetch('https://api.github.com/repos/' + repo + path, {
+      method: opts.method || 'GET',
       headers: {
-        Authorization: `Bearer ${pat}`,
+        Authorization: 'Bearer ' + pat,
         Accept: 'application/vnd.github+json',
         'Content-Type': 'application/json',
         'X-GitHub-Api-Version': '2022-11-28',
       },
-      body: opts.body != null ? JSON.stringify(opts.body) : undefined,
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
     });
-    if (!res.ok) throw new Error(`GitHub ${res.status} on ${path}: ${await res.text()}`);
+    if (!res.ok) throw new Error('GitHub ' + res.status + ' on ' + path + ': ' + await res.text());
     return res.json();
   };
 
   try {
-    // 1. Resolve branch tip
     log('Fetching branch ref…');
-    const { object: { sha: baseSha } } = await gh(`/git/ref/heads/${branch}`);
-    const { tree: { sha: baseTree } }  = await gh(`/git/commits/${baseSha}`);
+    const refData    = await gh('/git/ref/heads/' + branch);
+    const baseSha    = refData.object.sha;
+    const commitData = await gh('/git/commits/' + baseSha);
+    const baseTree   = commitData.tree.sha;
 
-    // 2. Create one blob per token file
-    log(`Creating ${Object.keys(files).length} blob(s)…`);
+    log('Creating ' + Object.keys(files).length + ' blob(s)…');
     const tree = [];
-    for (const [name, content] of Object.entries(files)) {
-      const { sha } = await gh('/git/blobs', { method: 'POST', body: { content, encoding: 'utf-8' } });
-      tree.push({ path: `${folder}/${name}`, mode: '100644', type: 'blob', sha });
+    const names = Object.keys(files);
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i];
+      const blobData = await gh('/git/blobs', { method: 'POST', body: { content: files[name], encoding: 'utf-8' } });
+      tree.push({ path: folder + '/' + name, mode: '100644', type: 'blob', sha: blobData.sha });
     }
 
-    // 3. Atomic commit: new tree → new commit → update ref
     log('Committing…');
-    const { sha: newTree }   = await gh('/git/trees', { method: 'POST',
-      body: { base_tree: baseTree, tree } });
-    const { sha: newCommit } = await gh('/git/commits', { method: 'POST', body: {
-      message: `chore: sync tokens from Figma (${new Date().toISOString().slice(0, 10)})`,
-      tree: newTree,
+    const treeData   = await gh('/git/trees', { method: 'POST', body: { base_tree: baseTree, tree: tree } });
+    const commitRes  = await gh('/git/commits', { method: 'POST', body: {
+      message: 'chore: sync tokens from Figma (' + new Date().toISOString().slice(0, 10) + ')',
+      tree: treeData.sha,
       parents: [baseSha],
     }});
-    await gh(`/git/refs/heads/${branch}`, { method: 'PATCH', body: { sha: newCommit } });
+    await gh('/git/refs/heads/' + branch, { method: 'PATCH', body: { sha: commitRes.sha } });
 
-    log(`✓ ${Object.keys(files).length} file(s) → ${repo}@${branch}`, 'ok');
-    log(`  ${Object.keys(files).join('  ')}`, 'ok');
+    log('✓ ' + Object.keys(files).length + ' file(s) pushed to ' + repo + ' @ ' + branch, 'ok');
+    log('  ' + Object.keys(files).join('  '), 'ok');
   } catch (e) {
     log(e.message, 'err');
   } finally {
     $('btn').disabled = false;
+    $('btn').textContent = 'Sync tokens to GitHub';
   }
-};
+}
 </script>
 </body>
 </html>
