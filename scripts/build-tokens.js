@@ -2,7 +2,7 @@
 /**
  * Builds CSS custom-property files from the DTCG token JSON using Style Dictionary v4.
  *
- * Reads:  tokens/**\/*.tokens.json   (written by fetch-tokens.js)
+ * Reads:  tokens/**\/*.tokens.json   (pushed by the Figma plugin)
  * Writes:
  *   dist/tokens.css       – all light/default tokens in :root
  *   dist/tokens.dark.css  – dark semantic overrides in [data-theme="dark"]
@@ -18,7 +18,7 @@ mkdirSync('dist', { recursive: true });
 
 const allFiles = globSync('tokens/**/*.tokens.json');
 if (allFiles.length === 0) {
-  console.error('No token files found – run `npm run fetch` first.');
+  console.error('No token files found in tokens/ — sync from Figma first.');
   process.exit(1);
 }
 

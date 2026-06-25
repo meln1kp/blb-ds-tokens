@@ -1,11 +1,11 @@
 name: Build Tokens
 
 on:
-  # Fires when Tokens Studio pushes token JSON to main
+  # Fires when the Figma plugin pushes token JSON to main
   push:
     branches: [main]
     paths: ['tokens/**']
-  # Keep manual trigger for one-off rebuilds
+  # Manual trigger for one-off rebuilds
   workflow_dispatch:
 
 permissions:
