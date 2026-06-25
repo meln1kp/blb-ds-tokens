@@ -107,4 +107,4 @@ figma.ui.on('message', function(msg) {
   } catch (err) {
     figma.ui.postMessage({ type: 'error', message: String(err) });
   }
-};
+});
